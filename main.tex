@@ -93,15 +93,24 @@ O diário de um programador de merda! \par % Book title
 ~\vfill
 \thispagestyle{empty}
 
-\noindent Copyright \copyright\ 2013 John Smith\\ % Copyright notice
+%\noindent Copyright \copyright\ 2013 John Smith\\ % Copyright notice
 
-\noindent \textsc{Published by Publisher}\\ % Publisher
+%\noindent \textsc{Published by Publisher}\\ % Publisher
 
-\noindent \textsc{book-website.com}\\ % URL
+%\noindent \textsc{book-website.com}\\ % URL
 
-\noindent Licensed under the Creative Commons Attribution-NonCommercial 3.0 Unported License (the ``License''). You may not use this file except in compliance with the License. You may obtain a copy of the License at \url{http://creativecommons.org/licenses/by-nc/3.0}. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \textsc{``AS IS'' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND}, either express or implied. See the License for the specific language governing permissions and limitations under the License.\\ % License information
+\noindent/*\\
+\noindent* ----------------------------------------------------------------------------\\
+\noindent* "THE BEER-WARE LICENSE" (Revision 42):\\
+\noindent* <phk@FreeBSD.ORG> wrote this file. As long as you retain this notice you\\
+\noindent* can do whatever you want with this stuff. If we meet some day, and you think\\
+\noindent* this stuff is worth it, you can buy me a beer in return Poul-Henning Kamp\\
+\noindent* ----------------------------------------------------------------------------\\
+\noindent*/\\
 
-\noindent \textit{First printing, March 2013} % Printing/edition date
+%\noindent Licensed under the Creative Commons Attribution-NonCommercial 3.0 Unported License (the ``License''). You may not use this file except in compliance with the License. You may obtain a copy of the License at \url{http://creativecommons.org/licenses/by-nc/3.0}. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \textsc{``AS IS'' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND}, either express or implied. See the License for the specific language governing permissions and limitations under the License.\\ % License information
+
+%\noindent \textit{First printing, March 2013} % Printing/edition date
 
 %----------------------------------------------------------------------------------------
 %	TABLE OF CONTENTS
@@ -109,11 +118,11 @@ O diário de um programador de merda! \par % Book title
 
 \chapterimage{chapter_head_1.pdf} % Table of contents heading image
 
-\pagestyle{empty} % No headers
+%\pagestyle{empty} % No headers
 
 \tableofcontents % Print the table of contents itself
 
-\cleardoublepage % Forces the first chapter to start on an odd page so it's on the right
+%\cleardoublepage % Forces the first chapter to start on an odd page so it's on the right
 
 \pagestyle{fancy} % Print headers again
 
@@ -121,107 +130,36 @@ O diário de um programador de merda! \par % Book title
 %	CHAPTER 1
 %----------------------------------------------------------------------------------------
 
-\chapterimage{chapter_head_2.pdf} % Chapter heading image
-
-\chapter{Text Chapter}
-
-\section{Paragraphs of Text}\index{Paragraphs of Text}
-
-\lipsum[1-7] % Dummy text
-
-%------------------------------------------------
-
-\section{Citation}\index{Citation}
-
-This statement requires citation \cite{book_key}; this one is more specific \cite[122]{article_key}.
-
-%------------------------------------------------
-
-\section{Lists}\index{Lists}
-
-Lists are useful to present information in a concise and/or ordered way\footnote{Footnote example...}.
-
-\subsection{Numbered List}\index{Lists!Numbered List}
-
-\begin{enumerate}
-\item The first item
-\item The second item
-\item The third item
-\end{enumerate}
-
-\subsection{Bullet Points}\index{Lists!Bullet Points}
-
-\begin{itemize}
-\item The first item
-\item The second item
-\item The third item
-\end{itemize}
-
-\subsection{Descriptions and Definitions}\index{Lists!Descriptions and Definitions}
-
-\begin{description}
-\item[Name] Description
-\item[Word] Definition
-\item[Comment] Elaboration
-\end{description}
-
+\input{chapters/introducao/introducao}
 %----------------------------------------------------------------------------------------
 %	CHAPTER 2
 %----------------------------------------------------------------------------------------
-\input{chapters/chapter2}
+%\input{chapters/chapter1}
 %----------------------------------------------------------------------------------------
 %	CHAPTER 3
 %----------------------------------------------------------------------------------------
-
-\chapterimage{chapter_head_1.pdf} % Chapter heading image
-
-\chapter{Presenting Information}
-
-\section{Table}\index{Table}
-
-\begin{table}[h]
-\centering
-\begin{tabular}{l l l}
-\toprule
-\textbf{Treatments} & \textbf{Response 1} & \textbf{Response 2}\\
-\midrule
-Treatment 1 & 0.0003262 & 0.562 \\
-Treatment 2 & 0.0015681 & 0.910 \\
-Treatment 3 & 0.0009271 & 0.296 \\
-\bottomrule
-\end{tabular}
-\caption{Table caption}
-\end{table}
-
-%------------------------------------------------
-
-\section{Figure}\index{Figure}
-
-\begin{figure}[h]
-\centering\includegraphics[scale=0.5]{placeholder}
-\caption{Figure caption}
-\end{figure}
+%\input{chapters/chapter1}
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
 
-\chapter*{Bibliography}
-\addcontentsline{toc}{chapter}{\textcolor{ocre}{Bibliography}}
-\section*{Books}
-\addcontentsline{toc}{section}{Books}
-\printbibliography[heading=bibempty,type=book]
-\section*{Articles}
-\addcontentsline{toc}{section}{Articles}
-\printbibliography[heading=bibempty,type=article]
+%\chapter*{Bibliography}
+%\addcontentsline{toc}{chapter}{\textcolor{ocre}{Bibliography}}
+%\section*{Books}
+%\addcontentsline{toc}{section}{Books}
+%\printbibliography[heading=bibempty,type=book]
+%\section*{Articles}
+%\addcontentsline{toc}{section}{Articles}
+%\printbibliography[heading=bibempty,type=article]
 
 %----------------------------------------------------------------------------------------
 %	INDEX
 %----------------------------------------------------------------------------------------
 
-\cleardoublepage
+%\cleardoublepage
 \setlength{\columnsep}{0.75cm}
-\addcontentsline{toc}{chapter}{\textcolor{ocre}{Index}}
+\addcontentsline{toc}{chapter}{\textcolor{black}{Index}}
 \printindex
 
 %----------------------------------------------------------------------------------------
