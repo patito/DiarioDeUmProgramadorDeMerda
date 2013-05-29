@@ -1,0 +1,259 @@
+
+\chapterimage{header.pdf} % Chapter heading image
+
+\chapter{Reference Counting}
+
+"Gerenciamento de memória? Pra que? \textit{Hardware} é tão barato, não vou desalocar a memória". "Sou vida loka, faço pipoca de panela aberta e não libero mémória".
+"Só libera a memória quando quer impressionar a estagiária nova?". Se você pensa dessa maneira, parabéns campeão, você é um dos meus, 
+está liberado para ir assistir \textit{The Big Bang Theory}. Mas para aqueles que são caretas e gostam de viver de forma correta vamos apresentar uma outra solução.
+O gerenciamento de memória é uma das maiores dores de cabeça dos programadores \textit{C}, fazer essa atividade manualmente com 
+\textit{malloc()} e \textit{free()} funciona, porém se você esquecer um \textit{free()} poderá causar um \textit{memory leak}, se você usar o \textit{free()} de 
+forma errada, você pode corromper seu programa. Essa atividade não precisa ser tão árdua se utilizarmos algumas regras durante o gerenciamento da memória.
+
+
+\section{Como funciona?}
+\textit{Reference couting} é uma técnica de gerenciamento de memória bem simples, seu funcionamento é baseado em um contador interno 
+do objeto. Esse contador se inicia em 1 (um), quando o objeto é criado. Quando o programador precisar utilizar o objeto ele chama o método
+\textit{Ref}, assim o contador interno do objeto é incrementado em 1, quando este não for mais utilizado, o método \textit{UnRef}
+deve ser chamado, o contador interno será decrementado em 1. Quando esse contador interno chegar em zero, quer dizer que ele não 
+é mais referenciado e pode ser liberado. Vamos seguir com um pequeno passo-a-passo.
+
+\vspace{5 mm}
+
+\begin{itemize}
+  \item person\_new   | contador = 1  /* Criando o Objeto, contador inicia em 1 */
+  \item person\_ref   | contador = 2  /* Programador retendo o Objeto, incrementa o contador */
+  \item person\_unref | contador = 1  /* Programador liberando o Objeto, decrementa o contador */
+  \item person\_unref | contador = 0  /* Objeto não é mais necessário, decrementa o contador */
+  \item Memória será liberada;        /* Objeto não é mais referenciado por ninguém e será liberado */
+\end{itemize}
+\vspace{5 mm}
+Reparem que chamamos duas vezes o método \textit{person\_unref}, um \textit{unref} é para o método \textit{person\_new} e outro porque utilizamos o método \textit{person\_ref} para reter
+o objeto.
+
+\section{Exemplo: Objeto Person}
+
+Para exemplificarmos a técnica de \textit{reference couting}, iremos dar o exemplo de um objeto \textit{Person} que contém \textbf{nome}, \textbf{sobrenome} e \textbf{idade}. 
+Esse exemplo é apenas demonstrativo, portanto não se apeguem a nomes e tratamento de erros, a idéia principal é passar o conceito 
+de \textit{reference counting}. Para esse nosso exemplo iremos implementar os métodos:
+\vspace{5 mm}
+\begin{itemize}
+  \item person\_new: Responsável por alocar o objeto;
+  \item \_person\_destroy: É um método estáfico responsável por liberar o objeto (memória);
+  \item person\_ref: Método responsável por reter o objeto (incrementa o contador);
+  \item person\_unref: Método responsável por liberar o objeto;
+  \item person\_print: Método para imprimir as informações de Person;
+\end{itemize}
+
+\section{Implementando o header}
+
+\textit{Header}? O que é isso? Não é só criar um \textit{main.c} e colocar tudo lá dentro? Isso mesmo campeão, quanto orgulho de ti, mas como nossos leitores são 
+frescos e gostam de coisas mais organizadas iremos criar o arquivo \textit{person.h}, colocar as assinaturas dos métodos e até fazer 
+uns comentários para ninguém sair falando que nosso código não é documentado. Estou me sentindo um programador \textit{java}, vamos 
+fazer um diagrama de estados??? NOOOOTTT.
+
+\belowcaptionskip=-10pt
+\begin{lstlisting}[label=some-code,caption=person.h]
+#ifndef _PERSON_H_
+#define _PERSON_H_
+
+typedef struct {
+    char *first_name;
+    char *last_name;
+    unsigned int age;
+    unsigned ref;
+} Person;
+
+/*  Method to create the persong object */
+Person* person_new(char *first_name,
+                   char *last_name,
+                   unsigned int age);
+
+/* Retain the object */
+void person_ref(Person *obj);
+
+/* Release the object */
+void person_unref(Person *obj);
+
+/* Print object information */
+void person_print(Person *obj);
+
+
+#endif /* _PERSON_H_ */
+\end{lstlisting}
+
+\section{Implementando o método new}
+
+Chegou o momento de implementarmos o método que irá criar o nosso objeto, ou seja, o método responsável por alocar a memória. TESÃOOO, já sinto um friozinho na barriga, OPS!
+Terminarei de escrever essa parte no banheiro e farei muita FORÇA para sair TUUUDO cerrtoo. Meu caro leitor, antes de continuar a parte técnica, vou me abrir um pouco com 
+vocês, e também ascender um fósforo. Vamos falar um pouco de merda, mas é só isso que tem nesse documento, ok ok, tu me entendeu. Existe prazer maior no mundo que dar uma 
+c4g4d4 e programar em \textit{C} ao mesmo tempo? Se existe eu desconheço. Eu particularmente acho estranho as pessoas não falarem muito que programam durante o seu momento no
+trono, porra é muito bom. Na real c4g4r e programar tem muito em comum, em ambos os casos quando você termina, enche a boca e fala orgulhoso: "Esse é meu filhão!" Voltando para a
+merda do código reparem que \textit{obj->ref} foi inicializada com 1.
+
+\belowcaptionskip=-10pt
+\begin{lstlisting}[label=some-code,caption=person\_new()]
+Person *person_new (char *first_name, 
+                    char *last_name, 
+                    unsigned int age)
+{
+        Person *obj = (Person *)malloc(sizeof(Person));
+        if (NULL == obj) {
+                printf("%s Out of Memory!\n", __FUNCTION__);
+                return NULL;
+        }
+
+        if (NULL == first_name) {
+            printf("Invalid first_name!\n");
+            return NULL;
+        }
+
+        if (NULL == last_name) {
+            printf("Invalid last_name!\n");
+            return NULL;
+        }
+
+        obj->first_name = strdup(first_name);
+        obj->last_name = strdup(last_name);
+        obj->age = age;
+        obj->ref = 1;   /*  Reference Counting */
+
+        printf("Creating object[%p] Person\n", obj);
+        return obj;
+}
+
+\end{lstlisting}
+
+\vspace{50mm}
+
+\section{Método person\_ref}
+Agora vamos implementar o método que irá reter o nosso objeto. Lembre-se que para cada Ref no objeto um UnRef deve ser chamado, caso contrário um leak ocorrerá.
+
+\belowcaptionskip=-10pt
+\begin{lstlisting}[label=some-code,caption=person\_ref()]
+void person_ref(Person *obj)
+{
+    if (NULL == obj) {
+       printf("Person Obj is NULL");
+       return;
+    }
+    obj->ref++; /*  Incrementando nosso contador */
+}
+\end{lstlisting}
+
+\section{Método UnRef}
+
+Lembram para que serve o método UnRef? Pra porra nenhuma não é a resposta correta. Ele é responsável por decrementar o contador interno do objeto e verifica 
+se o objeto ainda é referenciado, caso não seja mais, um método para liberar a memória será chamado.
+
+\belowcaptionskip=-10pt
+\begin{lstlisting}[label=some-code,caption=person\_unref()]
+void person_unref(Person *obj)
+{
+    if (NULL == obj) {
+       printf("Person Obj is NULL");
+       return;
+    }
+
+    /*  Decrementa o contador e 
+     *  verifica se esta igual a 0 
+     */
+    if (--obj->ref == 0) {
+        printf("Memory Release obj[%p]\n", obj);
+        _person_destroy(obj);
+    }
+}
+\end{lstlisting}
+
+\section{Liberando a memória}
+
+Quando implementamos o método \textit{person\_new()} alocamos algumas informações na memória, e esse é o momento de honrarmos o que temos no meio das pernas, 
+assumirmos nossas responsabilidades e mandarmos as informações para caso do caralho, desculpe pessoal pelo ataque de raiva, estou sem café. 
+Como eu estava dizendo, esse é o momento de liberarmos a memória e vivermos felizes sem \textit{memory leak}. 
+\vspace{50mm}
+\belowcaptionskip=-10pt
+\begin{lstlisting}[label=some-code,caption=\_person\_destroy()]
+static void _person_destroy(Person *obj)
+{
+    if (NULL == obj) {
+        printf("Person object is NULL!\n");
+        return;
+    }
+
+    if (NULL != obj->first_name) {
+        free(obj->first_name);
+    }
+
+    if (NULL != obj->last_name) {
+        free(obj->last_name);
+    }
+
+    free(obj);
+}
+\end{lstlisting}
+
+\section{Implementando o main.c}
+
+Dentro do \textit{main.c} que iremos utilizar os métodos que implementamos acima. Reparem que para cada método \textit{person\_new()} tem um \textit{person\_unref()} associado. 
+E você esta livre para fazer testes, tente comentar a linha \textit{person\_unref(father);} e repare que a memória não será liberada.
+
+\belowcaptionskip=-10pt
+\begin{lstlisting}[label=some-code,caption=main.c]
+#include <stdio.h>
+
+#include "person.h"
+
+int main()
+{
+    Person *father = person_new("Jose", "Rico", 65);
+    Person *mother = person_new("Beth", "Perigueti", 21);
+
+    person_print(father);
+    person_print(mother);
+
+    person_ref(father);
+    person_unref(father);
+
+    /* New method - Unref */
+    person_unref(father);
+    person_unref(mother);
+
+    return 0;
+}
+\end{lstlisting}
+
+
+\section{Criando o Makefile}
+
+Como eu sou um cara muito legal e to ligado que a grande maioria dos leitores são preguiçosos, irei fazer um \textit{Makefile}, se eu fosse um cara sacana eu faria um \textit{autohell}, 
+hehehe.
+
+\belowcaptionskip=-10pt
+\begin{lstlisting}[label=some-code,caption=Makefile]
+CC      := gcc
+
+CFLAGS  := -W -Wall -Werror -I.
+
+BIN     := person
+
+SRC := main.c person.c
+OBJ := $(patsubst %.c,%.o,$(SRC))
+
+%.o: %.c
+                $(CC) $(CFLAGS) -o $@ -c $<
+
+all: $(OBJ)
+                $(CC) $(CFLAGS) -o $(BIN) $(OBJ)
+
+clean:
+                $(RM) $(BIN) $(OBJ) *.o $(LIB)
+\end{lstlisting}
+
+\section{Conclusão}
+
+Podemos tirar alguma conclusão boa desse capítulo? O cara que escreveu esse capítulo é um anão, grosso, mal educado e burro. Ok, isso é verdade, mas vamos pular os detalhes. 
+Acredito que o gerenciamento de memória em \textit{C} não precisa ser uma tarefa tão dolorosa, se seguirmos algumas regras básicas podemos tornar essa atividade mais fácil. 
+Esse exemplo é simples, mas a idéia é a mesma para problemas complexos. Lembrando que o código completo está no \textit{github}, na pasta \textit{code}, dentro do capítulo 
+\textit{reference.}
+
+
