@@ -3,7 +3,7 @@
 
 \chapter{Reference Counting}
 
-"Gerenciamento de memória? Pra que? \textit{Hardware} é tão barato, não vou desalocar a memória". "Sou vida loka, faço pipoca de panela aberta e não libero mémória".
+"Gerenciamento de memória? Pra que? \textit{Hardware} é tão barato, não vou desalocar a memória". "Sou vida loka, faço pipoca de panela aberta e não libero memória".
 "Só libera a memória quando quer impressionar a estagiária nova?". Se você pensa dessa maneira, parabéns campeão, você é um dos meus, 
 está liberado para ir assistir \textit{The Big Bang Theory}. Mas para aqueles que são caretas e gostam de viver de forma correta vamos apresentar uma outra solução.
 O gerenciamento de memória é uma das maiores dores de cabeça dos programadores \textit{C}, fazer essa atividade manualmente com 
@@ -86,7 +86,7 @@ void person_print(Person *obj);
 
 Chegou o momento de implementarmos o método que irá criar o nosso objeto, ou seja, o método responsável por alocar a memória. TESÃOOO, já sinto um friozinho na barriga, OPS!
 Terminarei de escrever essa parte no banheiro e farei muita FORÇA para sair TUUUDO cerrtoo. Meu caro leitor, antes de continuar a parte técnica, vou me abrir um pouco com 
-vocês, e também ascender um fósforo. Vamos falar um pouco de merda, mas é só isso que tem nesse documento, ok ok, tu me entendeu. Existe prazer maior no mundo que dar uma 
+vocês, e também acender um fósforo. Vamos falar um pouco de merda, mas é só isso que tem nesse documento, ok ok, tu me entendeu. Existe prazer maior no mundo que dar uma 
 c4g4d4 e programar em \textit{C} ao mesmo tempo? Se existe eu desconheço. Eu particularmente acho estranho as pessoas não falarem muito que programam durante o seu momento no
 trono, porra é muito bom. Na real c4g4r e programar tem muito em comum, em ambos os casos quando você termina, enche a boca e fala orgulhoso: "Esse é meu filhão!" Voltando para a
 merda do código reparem que \textit{obj->ref} foi inicializada com 1.
@@ -195,7 +195,7 @@ static void _person_destroy(Person *obj)
 \section{Implementando o main.c}
 
 Dentro do \textit{main.c} que iremos utilizar os métodos que implementamos acima. Reparem que para cada método \textit{person\_new()} tem um \textit{person\_unref()} associado. 
-E você esta livre para fazer testes, tente comentar a linha \textit{person\_unref(father);} e repare que a memória não será liberada.
+E você está livre para fazer testes, tente comentar a linha \textit{person\_unref(father);} e repare que a memória não será liberada.
 
 \belowcaptionskip=-10pt
 \begin{lstlisting}[label=some-code,caption=main.c]
