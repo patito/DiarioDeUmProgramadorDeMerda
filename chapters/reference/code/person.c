@@ -6,12 +6,6 @@
 
 Person *person_new (char *first_name, char *last_name, unsigned int age)
 {
-	Person *obj = (Person *)malloc(sizeof(Person));
-	if (NULL == obj) {
-		printf("%s Out of Memory!\n", __FUNCTION__);
-		return NULL;
-	}
-       
         if (NULL == first_name) {
             printf("Invalid first_name!\n");
             return NULL;
@@ -20,6 +14,12 @@ Person *person_new (char *first_name, char *last_name, unsigned int age)
         if (NULL == last_name) {
             printf("Invalid last_name!\n");
             return NULL;
+        }
+
+        Person *obj = (Person *)malloc(sizeof(Person));
+        if (NULL == obj) {
+                printf("%s Out of Memory!\n", __FUNCTION__);
+                return NULL;
         }
 
 	obj->first_name = strdup(first_name);
